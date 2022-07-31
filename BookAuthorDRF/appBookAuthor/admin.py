@@ -14,4 +14,4 @@ class BooksAdmin(admin.ModelAdmin):
 
 @admin.register(Authors)
 class AuthorsTypeAdmin(admin.ModelAdmin):
-    list_display = ["name","books","city","dob","created_at","updated_at"]
+    list_display = ["name","city","dob","created_at","updated_at"]
