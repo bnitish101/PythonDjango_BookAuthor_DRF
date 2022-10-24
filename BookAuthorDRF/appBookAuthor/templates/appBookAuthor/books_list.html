@@ -1,0 +1,37 @@
+<h1>Book Home Page</h1>
+<hr>
+<h3>1</h3>
+<p>{{books}}</p>
+{% for book in books %}
+    <br/>{{book}}
+{% endfor %}
+
+<hr>
+<h3>2</h3>
+<p>{{books_list}}</p>
+{% for book in books_list %}
+    <br/>{{book}}
+{% endfor %}
+
+<hr>
+<h3>3</h3>
+<p>{{object_list}}</p>
+{% for book in object_list %}
+    <br/>{{book}}
+{% endfor %}
+<hr>
+
+<hr>
+<h3>3</h3>
+<p>{{k1}}</p>
+<p>{{k2}}</p>
+<p>{{k3}}</p>
+<p>{{k4}}</p>
+<p>{{k5}}</p>
+<p>{{my_context1}}</p>
+<p>{{my_context2}}</p>
+<p>{{my_context3}}</p>
+{% for book in my_context %}
+    <br/>{{book}}
+{% endfor %}
+<hr>
