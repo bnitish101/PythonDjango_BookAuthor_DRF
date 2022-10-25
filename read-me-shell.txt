@@ -25,3 +25,11 @@ from appBookAuthor.models import Books, Authors, BookType
 >>> b5.author.add(a4)
 # Remove many to many relation
 >>> b5.author.remove(a4)
+
+# Create Bulk relation
+# fetch all authors
+>>> a = Authors.objects.all()
+# fetch book five
+>>> b5 = Books.objects.get(id=5)
+# create relation for all authors at once
+>>> b5.author.add(*a)
