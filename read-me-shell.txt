@@ -8,7 +8,7 @@ from appBookAuthor.models import Books, Authors, BookType
 
 >>> b5 = Books(title='Book5', description='This is fifth book', publish_date='2023-01-01', price='105', book_type=bt4)
 
-# Note:book_author is defind as related_name, defult is small leter model's name then _set
+# Note:<book_author> is defind as related_name='book_author' in the Books Model, defult is small leter model's name then _set
 
 # From Patent table
 # Fetch all the records for author four
