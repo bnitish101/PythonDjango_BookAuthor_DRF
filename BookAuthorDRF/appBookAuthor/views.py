@@ -6,8 +6,11 @@ from django.db.models import Q
 
 class BooksViewSet(ListView):
     model = Books
+
+class BooksViewSetQueryPrint(ListView):
+    model = Books
     context_object_name = 'books'
-    # template_name = 'appBookAuthor/author.html'
+    template_name = 'appBookAuthor/books_query.html'
     con1 = Books.objects.filter(pk=1)
     q1 = con1.query
     con2 = con1.distinct()
@@ -22,8 +25,12 @@ class BooksViewSet(ListView):
     # con5 = con4.prefetch_related() 
     con5 = BookType.objects.prefetch_related('books_set').filter(books__title__iexact="Mystery").values('books__title')  
     q5 = con5.query
+
+    con6 = BookType.objects.get(Q(pk=2))
+    q6 = con6.books_set.filter().exclude(id=1).exclude(id=2)
+    q6 = q6.query
     
-    extra_context = {"k1": q1, "k2": q2, "k3": q3, "k4": q4, "k5": q5}
+    extra_context = {"k1": q1, "k2": q2, "k3": q3, "k4": q4, "k5": q5, "k6": q6}
     # extra_context = "k1"
     # def get_context_data(self, **kwargs):
     #     # Call the base implementation first to get a context
