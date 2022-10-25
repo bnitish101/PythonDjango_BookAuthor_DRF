@@ -33,3 +33,10 @@ from appBookAuthor.models import Books, Authors, BookType
 >>> b5 = Books.objects.get(id=5)
 # create relation for all authors at once
 >>> b5.author.add(*a)
+# Removes all objects from the related object set:
+>>> b5.author.clear()
+# fetch Multiple authors
+
+>>> a_mul = [Authors.objects.get(id=1), Authors.objects.get(id=3), Authors.objects.get(id=4)]
+# create multiple M2M relationship at once
+>>> b5.author.add(*a_mul)  
