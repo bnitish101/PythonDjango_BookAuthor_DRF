@@ -1,37 +1,44 @@
 <h1>Book Home Page</h1>
 <hr>
-<h3>1</h3>
-<p>{{books}}</p>
-{% for book in books %}
-    <br/>{{book}}
-{% endfor %}
+<h3>Book list</h3>
+<table border="1" style="padding:11px; text-align: center;">
+    <thead>
+        <tr>
+            <th>title</th>
+            <th>description</th>
+            <th>publish_date</th>
+            <th>price</th>
+            <th>book_type</th>
+            <th>author</th>
+            <th>created_at</th>
+            <th>updated_at</th>
+        </tr>
+    </thead>
+    <tbody>
+        {# - object_list is default set by django class views#}
+        {# - <books> can be also used, is user defind in the views as context_object_name = 'books'#}
+        
+        {% for book in object_list%}
+        <tr>
+            <td>{{book.title}}</td>
+            <td>{{book.description}}</td>
+            <td>{{book.publish_date}}</td>
+            <td>{{book.price}}</td>
+            <td>{{book.book_type.name}}</td>
+            <td>
+                {% for auth in book.author.all %}
+                    {% if forloop.first %}
+                        {{auth.name}}
+                    {% else %}
+                        , {{auth.name}}
+                    {% endif %}
+                {% endfor %}
+            </td>
+            <td>{{book.created_at}}</td>
+            <td>{{book.updated_at}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    
+</table>
 
-<hr>
-<h3>2</h3>
-<p>{{books_list}}</p>
-{% for book in books_list %}
-    <br/>{{book}}
-{% endfor %}
-
-<hr>
-<h3>3</h3>
-<p>{{object_list}}</p>
-{% for book in object_list %}
-    <br/>{{book}}
-{% endfor %}
-<hr>
-
-<hr>
-<h3>4</h3>
-<p>{{k1}}</p>
-<p>{{k2}}</p>
-<p>{{k3}}</p>
-<p>{{k4}}</p>
-<p>{{k5}}</p>
-<p>{{my_context1}}</p>
-<p>{{my_context2}}</p>
-<p>{{my_context3}}</p>
-{% for book in my_context %}
-    <br/>{{book}}
-{% endfor %}
-<hr>
