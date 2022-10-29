@@ -6,6 +6,9 @@ from django.db.models import Q
 
 class BooksViewSet(ListView):
     model = Books
+    context_object_name = 'books'
+    queryset = Books.objects.select_related()
+    print(queryset.query)
 
 class BooksViewSetQueryPrint(ListView):
     model = Books
