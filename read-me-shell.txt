@@ -40,3 +40,56 @@ from appBookAuthor.models import Books, Authors, BookType
 >>> a_mul = [Authors.objects.get(id=1), Authors.objects.get(id=3), Authors.objects.get(id=4)]
 # create multiple M2M relationship at once
 >>> b5.author.add(*a_mul)  
+
+
+
+# s: Complex Query 1
+# Reference: https://stackoverflow.com/questions/47979998/how-to-annotate-queryset-with-another-queryset
+t_range=self.context.get('period')
+employees = Employees.objects.filter(order__closed_at__range=t_range) \
+    .annotate(
+        visits=Count(...),
+        guests=Count(...),
+        cycle_time=Sum(...),
+    )
+
+result = []
+
+for employee in employees:
+    menu_item_categories = MenuItemCategory.objects.filter(menuitem__lineitem__order__waiter=employee) \
+        .annotate(
+            line_items_quantity=Count(...),
+            amount=Sum(...),
+        )
+    _cats = []
+    for cat in menu_item_categories:
+        menu_items = cat.menuitem_set.filter(order__waiter=employee) \
+            .annotate(
+                amount=Sum(...),
+                line_items_quantity=Count(...),
+            )
+        _menu_items = []
+        for menu_item in menu_items:
+            _menu_item = {
+                'name': menu_item.name,
+                'amount': menu_item.amount,
+                'line_items_quantity': menu_item.line_items_quantity,
+            }
+            _menu_items.append(_menu_item)
+
+        _cats.append({
+            'name': cat.name,
+            'line_items_quantity': cat.line_items_quantity,
+            'amount': cat.amount,
+            'menu_items': _menu_items
+        })
+
+    result.append({
+        'employee_name': employee.name,
+        'visits': employee.visits,
+        'guests': employee.guests,
+        'cycle_time': employee.cycle_time,
+        'menu_item_categories': _cats
+    })
+
+# e: Complex Query 1
