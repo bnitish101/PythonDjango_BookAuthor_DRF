@@ -8,6 +8,9 @@ class BookType(models.Model):
     class Meta:
         db_table = 'tbl_book_type'
 
+    def __str__(self) -> str:
+        return self.name
+
 class Authors(models.Model):
     name = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
@@ -16,6 +19,9 @@ class Authors(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     class Meta:
         db_table = 'tbl_authors'
+    
+    def __str__(self) -> str:
+        return self.name
 
 class Books(models.Model):
     title = models.CharField(max_length=100)
@@ -28,3 +34,6 @@ class Books(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     class Meta:
         db_table = 'tbl_books'
+    
+    def __str__(self) -> str:
+        return self.title
