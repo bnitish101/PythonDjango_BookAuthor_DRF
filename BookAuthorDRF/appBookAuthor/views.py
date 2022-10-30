@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView 
 from .models import Books, Authors, BookType
-from django.db.models import Q
+from django.db.models import Q, F, Count
 # Create your views here.
 
 class BooksViewSet(ListView):
@@ -32,8 +32,127 @@ class BooksViewSetQueryPrint(ListView):
     con6 = BookType.objects.get(Q(pk=2))
     q6 = con6.books_set.filter().exclude(id=1).exclude(id=2)
     q6 = q6.query
+
+    # bt = BookType.objects.
+    con7 = BookType.objects.prefetch_related('books_set').filter(books__id = 2)
+    q7 = con7
+    q7 = vars(q7[0].books_set.all()[0])
+
+    # retrieve the all the records from many to many relationship using for loop 
+    books = Books.objects.select_related()
+    result =[]
+    for book in books:
+        _auths_name = []
+        for auth in book.author.all():
+            _auths_name.append({"auth_name": auth.name, "auth_city": auth.city, "auth_dob": auth.dob})
+        result.append({
+            'book_name': book.title,
+            'book_type': {"bt_name": book.book_type.name, "bt_created_at": book.book_type.created_at},
+            'author_name': _auths_name
+        })
     
-    extra_context = {"k1": q1, "k2": q2, "k3": q3, "k4": q4, "k5": q5, "k6": q6}
+    # OUTPUT
+    '''
+    result = 
+    [
+        {
+            'book_name': 'Book1',
+            'book_type': {
+            'bt_name': 'Sci-Fi',
+            'bt_created_at': 'datetime.datetime(2022,7,31,13,22,3,717378,tzinfo=datetime.timezone.utc)'
+            },
+            'author_name': [
+            {
+                'auth_name': 'Author2',
+                'auth_city': 'Mumbai',
+                'auth_dob': 'datetime.date(2022,6,1)'
+            },
+            {
+                'auth_name': 'Author3',
+                'auth_city': 'Goa',
+                'auth_dob': 'datetime.date(2022,4,1)'
+            }
+            ]
+        },
+        {
+            'book_name': 'Book2',
+            'book_type': {
+            'bt_name': 'Thriller',
+            'bt_created_at': 'datetime.datetime(2022,7,31,13,22,21,360901,tzinfo=datetime.timezone.utc)'
+            },
+            'author_name': [
+            {
+                'auth_name': 'Author1',
+                'auth_city': 'Mumbai',
+                'auth_dob': 'datetime.date(2022,6,1)'
+            },
+            {
+                'auth_name': 'Author2',
+                'auth_city': 'Mumbai',
+                'auth_dob': 'datetime.date(2022,6,1)'
+            },
+            {
+                'auth_name': 'Author3',
+                'auth_city': 'Goa',
+                'auth_dob': 'datetime.date(2022,4,1)'
+            }
+            ]
+        },
+        {
+            'book_name': 'Book3',
+            'book_type': {
+            'bt_name': 'Mystery',
+            'bt_created_at': 'datetime.datetime(2022,7,31,13,22,12,774725,tzinfo=datetime.timezone.utc)'
+            },
+            'author_name': [
+            {
+                'auth_name': 'Author4',
+                'auth_city': 'Delhi',
+                'auth_dob': 'datetime.date(2000,1,1)'
+            }
+            ]
+        },
+        {
+            'book_name': 'Book4',
+            'book_type': {
+            'bt_name': 'Fantasy',
+            'bt_created_at': 'datetime.datetime(2022,7,31,13,21,54,484780,tzinfo=datetime.timezone.utc)'
+            },
+            'author_name': [
+            {
+                'auth_name': 'Author4',
+                'auth_city': 'Delhi',
+                'auth_dob': 'datetime.date(2000,1,1)'
+            }
+            ]
+        },
+        {
+            'book_name': 'Book5',
+            'book_type': {
+            'bt_name': 'Thriller',
+            'bt_created_at': 'datetime.datetime(2022,7,31,13,22,21,360901,tzinfo=datetime.timezone.utc)'
+            },
+            'author_name': [
+            {
+                'auth_name': 'Author1',
+                'auth_city': 'Mumbai',
+                'auth_dob': 'datetime.date(2022,6,1)'
+            },
+            {
+                'auth_name': 'Author3',
+                'auth_city': 'Goa',
+                'auth_dob': 'datetime.date(2022,4,1)'
+            },
+            {
+                'auth_name': 'Author4',
+                'auth_city': 'Delhi',
+                'auth_dob': 'datetime.date(2000,1,1)'
+            }
+            ]
+        }
+    ]
+    '''
+    extra_context = {"k1": q1, "k2": q2, "k3": q3, "k4": q4, "k5": q5, "k6": q6, "k7": q7, "v7": vars(con7[0]), "v8": result}
     # extra_context = "k1"
     # def get_context_data(self, **kwargs):
     #     # Call the base implementation first to get a context
