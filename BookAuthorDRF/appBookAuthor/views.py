@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView 
 from .models import Books, Authors, BookType
-from django.db.models import Q, F, Count
+from django.db.models import Q, F, Count, OuterRef
+# from django.contrib.postgres.aggregates import StringAgg
 # Create your views here.
 
 class BooksViewSet(ListView):
@@ -152,6 +153,27 @@ class BooksViewSetQueryPrint(ListView):
         }
     ]
     '''
+    ex_books = Books.objects.select_related().annotate(
+    my_id=F('id'), 
+    # auths=F(
+    #     Books.objects.filter(id=F('id')).author.all()
+    #     )
+    )
+    # ex_books = ex_books.book.author.all()
+    # ex_books =Books.objects.annotate(
+    #     _annotated_value=F(dir('id'))
+    #     )
+    
+    # for PostgreSQL 
+    # https://code.djangoproject.com/ticket/31097
+    
+    # for SQL 
+    # https://stackoverflow.com/questions/10340684/group-concat-equivalent-in-django
+
+    print("-----------s ex_books -----------")
+    print(ex_books.query)
+    print("-----------e ex_books -----------")
+
     extra_context = {"k1": q1, "k2": q2, "k3": q3, "k4": q4, "k5": q5, "k6": q6, "k7": q7, "v7": vars(con7[0]), "v8": result}
     # extra_context = "k1"
     # def get_context_data(self, **kwargs):
